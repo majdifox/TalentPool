@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Mail;
 
 class AppController extends Controller
 {
-
+// apply for a job
     public function apply(Request $request, $offerID)
     {
         $request->validate([
