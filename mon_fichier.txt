@@ -1,1 +1,1 @@
-Refonte complète du design CSS
+Optimisation du code JavaScript pour améliorer les performances
