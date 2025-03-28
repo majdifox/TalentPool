@@ -1,1 +1,1 @@
-Correction d'un problème d'affichage sur les navigateurs Safari
+Ajout d'une API REST pour gérer les utilisateurs
