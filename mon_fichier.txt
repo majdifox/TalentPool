@@ -1,1 +1,1 @@
-Mise en place d'une base de données SQLite
+Correction d'un problème d'affichage sur les navigateurs Safari
