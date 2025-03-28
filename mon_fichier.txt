@@ -1,1 +1,1 @@
-Optimisation du code JavaScript pour améliorer les performances
+Ajout d'un test unitaire pour la fonction d'authentification
