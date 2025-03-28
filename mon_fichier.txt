@@ -1,1 +1,1 @@
-Ajout d'une API REST pour gérer les utilisateurs
+Nettoyage du code et suppression des fichiers inutiles
