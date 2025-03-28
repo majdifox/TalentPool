@@ -1,1 +1,1 @@
-Correction d'un bug sur l'affichage mobile
+Mise à jour du fichier README avec des instructions
