@@ -1,1 +1,1 @@
-Ajout d'un test unitaire pour la fonction d'authentification
+Mise en place d'une base de données SQLite
