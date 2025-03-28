@@ -1,1 +1,0 @@
-Implemented logging for API requests and responses
