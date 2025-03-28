@@ -1,1 +1,1 @@
-Added API rate limiting to prevent abuse
+Updated API documentation in Postman collection
