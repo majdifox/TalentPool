@@ -25,3 +25,5 @@
 // Correction de bugs dans la gestion des candidatures - Implémentation 2025-04-16
 
 // Amélioration de l'expérience utilisateur pour les candidatures - Implémentation 2025-04-16
+
+// Ajout de la confirmation avant envoi de candidature - Implémentation 2025-04-16
