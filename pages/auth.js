@@ -25,3 +25,5 @@
 // Sécurisation des routes protégées - Implémentation 2025-04-16
 
 // Correction de bugs d'authentification - Implémentation 2025-04-16
+
+// Amélioration du design des pages d'authentification - Implémentation 2025-04-16
