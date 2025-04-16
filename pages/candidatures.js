@@ -21,3 +21,5 @@
 // Optimisation de l'upload des fichiers - Implémentation 2025-04-16
 
 // Ajout de la prévisualisation des documents - Implémentation 2025-04-16
+
+// Correction de bugs dans la gestion des candidatures - Implémentation 2025-04-16
