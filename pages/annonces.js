@@ -13,3 +13,5 @@
 // Ajout de la suppression d'annonce - Implémentation 2025-04-16
 
 // Création de la barre de recherche - Implémentation 2025-04-16
+
+// Implémentation des filtres de recherche - Implémentation 2025-04-16
