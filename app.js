@@ -11,3 +11,5 @@
 // Refactorisation du code - Implémentation 2025-04-16
 
 // Mise à jour des dépendances - Implémentation 2025-04-16
+
+// Documentation du code - Implémentation 2025-04-16
