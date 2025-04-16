@@ -13,3 +13,5 @@
 // Ajout des emails de notification - Implémentation 2025-04-16
 
 // Implémentation des mises à jour en temps réel - Implémentation 2025-04-16
+
+// Correction de bugs dans le suivi des candidatures - Implémentation 2025-04-16
