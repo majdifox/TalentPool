@@ -19,3 +19,5 @@
 // Ajout de la page de détail d'une annonce - Implémentation 2025-04-16
 
 // Intégration de l'API pour les annonces - Implémentation 2025-04-16
+
+// Amélioration du design des annonces - Implémentation 2025-04-16
