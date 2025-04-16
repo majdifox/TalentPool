@@ -13,3 +13,5 @@
 // Mise à jour des dépendances - Implémentation 2025-04-16
 
 // Documentation du code - Implémentation 2025-04-16
+
+// Préparation pour le déploiement - Implémentation 2025-04-16
