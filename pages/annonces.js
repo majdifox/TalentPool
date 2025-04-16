@@ -25,3 +25,5 @@
 // Optimisation du chargement des annonces - Implémentation 2025-04-16
 
 // Ajout de la fonctionnalité de tri des annonces - Implémentation 2025-04-16
+
+// Correction de bugs dans la gestion des annonces - Implémentation 2025-04-16
