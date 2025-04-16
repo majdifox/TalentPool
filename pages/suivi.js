@@ -3,3 +3,5 @@
 // Implémentation du système de notifications - Implémentation 2025-04-16
 
 // Ajout des indicateurs visuels de statut - Implémentation 2025-04-16
+
+// Création de la page de suivi des candidatures - Implémentation 2025-04-16
