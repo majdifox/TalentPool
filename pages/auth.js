@@ -13,3 +13,5 @@
 // Création de la page de réinitialisation de mot de passe - Implémentation 2025-04-16
 
 // Ajout du formulaire de réinitialisation - Implémentation 2025-04-16
+
+// Intégration de l'API pour l'authentification - Implémentation 2025-04-16
