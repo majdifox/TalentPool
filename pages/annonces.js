@@ -5,3 +5,5 @@
 // Implémentation de la pagination des annonces - Implémentation 2025-04-16
 
 // Création du formulaire de création d'annonce - Implémentation 2025-04-16
+
+// Ajout de la validation des champs d'annonce - Implémentation 2025-04-16
