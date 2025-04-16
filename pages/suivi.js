@@ -11,3 +11,5 @@
 // Amélioration des notifications - Implémentation 2025-04-16
 
 // Ajout des emails de notification - Implémentation 2025-04-16
+
+// Implémentation des mises à jour en temps réel - Implémentation 2025-04-16
