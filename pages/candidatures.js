@@ -15,3 +15,5 @@
 // Implémentation des filtres de candidatures - Implémentation 2025-04-16
 
 // Intégration de l'API pour les candidatures - Implémentation 2025-04-16
+
+// Amélioration du design des formulaires de candidature - Implémentation 2025-04-16
