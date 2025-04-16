@@ -9,3 +9,5 @@
 // Création de la liste des candidatures envoyées - Implémentation 2025-04-16
 
 // Ajout de la fonctionnalité de retrait de candidature - Implémentation 2025-04-16
+
+// Création de l'espace recruteur pour voir les candidatures - Implémentation 2025-04-16
