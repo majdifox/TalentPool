@@ -21,3 +21,5 @@
 // Intégration de l'API pour les annonces - Implémentation 2025-04-16
 
 // Amélioration du design des annonces - Implémentation 2025-04-16
+
+// Optimisation du chargement des annonces - Implémentation 2025-04-16
