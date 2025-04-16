@@ -17,3 +17,5 @@
 // Implémentation des filtres de recherche - Implémentation 2025-04-16
 
 // Ajout de la page de détail d'une annonce - Implémentation 2025-04-16
+
+// Intégration de l'API pour les annonces - Implémentation 2025-04-16
