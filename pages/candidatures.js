@@ -13,3 +13,5 @@
 // Création de l'espace recruteur pour voir les candidatures - Implémentation 2025-04-16
 
 // Implémentation des filtres de candidatures - Implémentation 2025-04-16
+
+// Intégration de l'API pour les candidatures - Implémentation 2025-04-16
