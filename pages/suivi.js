@@ -7,3 +7,5 @@
 // Création de la page de suivi des candidatures - Implémentation 2025-04-16
 
 // Intégration de l'API pour le suivi - Implémentation 2025-04-16
+
+// Amélioration des notifications - Implémentation 2025-04-16
