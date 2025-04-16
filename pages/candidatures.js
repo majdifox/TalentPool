@@ -17,3 +17,5 @@
 // Intégration de l'API pour les candidatures - Implémentation 2025-04-16
 
 // Amélioration du design des formulaires de candidature - Implémentation 2025-04-16
+
+// Optimisation de l'upload des fichiers - Implémentation 2025-04-16
