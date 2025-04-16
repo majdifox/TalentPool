@@ -21,3 +21,5 @@
 // Implémentation de la persistance de session - Implémentation 2025-04-16
 
 // Ajout de la déconnexion - Implémentation 2025-04-16
+
+// Sécurisation des routes protégées - Implémentation 2025-04-16
