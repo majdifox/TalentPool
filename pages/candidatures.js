@@ -11,3 +11,5 @@
 // Ajout de la fonctionnalité de retrait de candidature - Implémentation 2025-04-16
 
 // Création de l'espace recruteur pour voir les candidatures - Implémentation 2025-04-16
+
+// Implémentation des filtres de candidatures - Implémentation 2025-04-16
