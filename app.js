@@ -7,3 +7,5 @@
 // Correction de bugs divers - Implémentation 2025-04-16
 
 // Amélioration de la responsivité - Implémentation 2025-04-16
+
+// Refactorisation du code - Implémentation 2025-04-16
