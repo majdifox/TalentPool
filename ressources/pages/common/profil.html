@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon profil - JobConnect</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <h1><a href="../../index.html">JobConnect</a></h1>
+            </div>
+            <nav class="main-nav">
+                <ul id="nav-links" class="nav-links">
+                    <li><a href="../../index.html">Accueil</a></li>
+                    <li id="dashboard-link"><a href="#">Tableau de bord</a></li>
+                    <li id="annonces-link" style="display: none;"><a href="../candidat/annonces.html">Offres d'emploi</a></li>
+                    <li id="candidatures-link" style="display: none;"><a href="../candidat/candidatures.html">Mes candidatures</a></li>
+                    <li><a href="profil.html" class="active">Mon profil</a></li>
+                    <li><a href="#" id="logout-btn" class="btn btn-outline">Déconnexion</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="profile-container">
+            <div class="profile-header">
+                <h2>Mon profil</h2>
+                <p>Gérez vos informations personnelles et professionnelles</p>
+            </div>
+            
+            <div class="profile-content">
+                <div class="profile-sidebar">
+                    <div class="profile-avatar">
+                        <div class="avatar-placeholder">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 id="user-name">Nom d'utilisateur</h3>
+                        <p id="user-role" class="user-role">Rôle</p>
+                    </div>
+                    
+                    <div class="profile-nav">
+                        <button class="profile-nav-item active" data-tab="personal-info">
+                            <i class="fas fa-user"></i> Informations personnelles
+                        </button>
+                        <button class="profile-nav-item" data-tab="professional-info">
+                            <i class="fas fa-briefcase"></i> Informations professionnelles
+                        </button>
+                        <button class="profile-nav-item" data-tab="cv-documents">
+                            <i class="fas fa-file-alt"></i> CV et documents
+                        </button>
+                        <button class="profile-nav-item" data-tab="account-settings">
+                            <i class="fas fa-cog"></i> Paramètres du compte
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="profile-main">
+                    <div id="loading" class="loading">Chargement de votre profil...</div>
+                    
+                    <div id="profile-tabs" class="profile-tabs">
+                        <!-- Onglet Informations personnelles -->
+                        <div id="personal-info" class="profile-tab active">
+                            <div class="tab-header">
+                                <h3>Informations personnelles</h3>
+                                <button id="edit-personal-info" class="btn btn-sm btn-outline">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </button>
+                            </div>
+                            
+                            <div id="personal-info-view" class="info-view">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <div class="info-label">Nom complet</div>
+                                        <div class="info-value" id="display-name">-</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Email</div>
+                                        <div class="info-value" id="display-email">-</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Téléphone</div>
+                                        <div class="info-value" id="display-phone">-</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Adresse</div>
+                                        <div class="info-value" id="display-address">-</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Ville</div>
+                                        <div class="info-value" id="display-city">-</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Code postal</div>
+                                        <div class="info-value" id="display-postal-code">-</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Pays</div>
+                                        <div class="info-value" id="display-country">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="personal-info-form" class="info-form" style="display: none;">
+                                <form id="personal-form">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="name">Nom complet</label>
+                                            <input type="text" id="name" name="name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" id="email" name="email" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="phone">Téléphone</label>
+                                            <input type="tel" id="phone" name="phone">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="address">Adresse</label>
+                                            <input type="text" id="address" name="address">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="city">Ville</label>
+                                            <input type="text" id="city" name="city">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="postal_code">Code postal</label>
+                                            <input type="text" id="postal_code" name="postal_code">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="country">Pays</label>
+                                            <input type="text" id="country" name="country">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button type="button" id="cancel-personal" class="btn btn-outline">Annuler</button>
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- Onglet Informations professionnelles -->
+                        <div id="professional-info" class="profile-tab">
+                            <div class="tab-header">
+                                <h3>Informations professionnelles</h3>
+                                <button id="edit-professional-info" class="btn btn-sm btn-outline">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </button>
+                            </div>
+                            
+                            <div id="professional-info-view" class="info-view">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <div class="info-label">Titre professionnel</div>
+                                        <div class="info-value" id="display-title">-</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Entreprise actuelle</div>
+                                        <div class="info-value" id="display-company">-</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Secteur d'activité</div>
+                                        <div class="info-value" id="display-sector">-</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Années d'expérience</div>
+                                        <div class="info-value" id="display-experience">-</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Niveau d'études</div>
+                                        <div class="info-value" id="display-education">-</div>
+                                    </div>
+                                    <div class="info-item full-width">
+                                        <div class="info-label">Compétences</div>
+                                        <div class="info-value" id="display-skills">-</div>
+                                    </div>
+                                    <div class="info-item full-width">
+                                        <div class="info-label">Bio professionnelle</div>
+                                        <div class="info-value" id="display-bio">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="professional-info-form" class="info-form" style="display: none;">
+                                <form id="professional-form">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="title">Titre professionnel</label>
+                                            <input type="text" id="title" name="title">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="company">Entreprise actuelle</label>
+                                            <input type="text" id="company" name="company">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="sector">Secteur d'activité</label>
+                                            <input type="text" id="sector" name="sector">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="experience">Années d'expérience</label>
+                                            <select id="experience" name="experience">
+                                                <option value="">Sélectionner</option>
+                                                <option value="0-1">Moins d'un an</option>
+                                                <option value="1-3">1 à 3 ans</option>
+                                                <option value="3-5">3 à 5 ans</option>
+                                                <option value="5-10">5 à 10 ans</option>
+                                                <option value="10+">Plus de 10 ans</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="education">Niveau d'études</label>
+                                            <select id="education" name="education">
+                                                <option value="">Sélectionner</option>
+                                                <option value="Bac">Bac</option>
+                                                <option value="Bac+2">Bac+2</option>
+                                                <option value="Bac+3">Bac+3</option>
+                                                <option value="Bac+5">Bac+5</option>
+                                                <option value="Doctorat">Doctorat</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <label for="skills">Compétences (séparées par des virgules)</label>
+                                            <input type="text" id="skills" name="skills">
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <label for="bio">Bio professionnelle</label>
+                                            <textarea id="bio" name="bio" rows="4"></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button type="button" id="cancel-professional" class="btn btn-outline">Annuler</button>
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- Onglet CV et documents -->
+                        <div id="cv-documents" class="profile-tab">
+                            <div class="tab-header">
+                                <h3>CV et documents</h3>
+                            </div>
+                            
+                            <div class="documents-section">
+                                <div class="document-upload">
+                                    <h4>CV principal</h4>
+                                    <p>Téléchargez votre CV principal qui sera utilisé pour vos candidatures</p>
+                                    
+                                    <div id="cv-status" class="document-status">
+                                        <div class="document-placeholder">
+                                            <i class="fas fa-file-pdf"></i>
+                                            <p>Aucun CV téléchargé</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <form id="cv-upload-form" class="upload-form">
+                                        <div class="form-group">
+                                            <label for="cv-file">Sélectionner un fichier (PDF uniquement)</label>
+                                            <input type="file" id="cv-file" name="cv" accept=".pdf" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Télécharger</button>
+                                    </form>
+                                </div>
+                                
+                                <div class="document-upload">
+                                    <h4>Documents complémentaires</h4>
+                                    <p>Ajoutez des documents supplémentaires pour renforcer votre profil</p>
+                                    
+                                    <div id="documents-list" class="documents-list">
+                                        <div class="empty-state">
+                                            <p>Aucun document complémentaire</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <form id="document-upload-form" class="upload-form">
+                                        <div class="form-group">
+                                            <label for="document-name">Nom du document</label>
+                                            <input type="text" id="document-name" name="name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="document-file">Sélectionner un fichier (PDF, DOC, DOCX)</label>
+                                            <input type="file" id="document-file" name="document" accept=".pdf,.doc,.docx" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Ajouter le document</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Onglet Paramètres du compte -->
+                        <div id="account-settings" class="profile-tab">
+                            <div class="tab-header">
+                                <h3>Paramètres du compte</h3>
+                            </div>
+                            
+                            <div class="settings-section">
+                                <h4>Changer le mot de passe</h4>
+                                <form id="password-form">
+                                    <div class="form-group">
+                                        <label for="current-password">Mot de passe actuel</label>
+                                        <input type="password" id="current-password" name="current_password" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="new-password">Nouveau mot de passe</label>
+                                        <input type="password" id="new-password" name="new_password" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirm-password">Confirmer le nouveau mot de passe</label>
+                                        <input type="password" id="confirm-password" name="password_confirmation" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
+                                </form>
+                            </div>
+                            
+                            <div class="settings-section">
+                                <h4>Notifications</h4>
+                                <div class="notification-settings">
+                                    <div class="notification-option">
+                                        <div class="notification-info">
+                                            <h5>Alertes d'offres d'emploi</h5>
+                                            <p>Recevez des notifications pour les nouvelles offres correspondant à votre profil</p>
+                                        </div>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" id="job-alerts" class="toggle-input" checked>
+                                            <label for="job-alerts" class="toggle-label"></label>
+                                        </div>
+                                    </div>
+                                    <div class="notification-option">
+                                        <div class="notification-info">
+                                            <h5>Mises à jour des candidatures</h5>
+                                            <p>Recevez des notifications lorsque le statut de vos candidatures change</p>
+                                        </div>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" id="application-updates" class="toggle-input" checked>
+                                            <label for="application-updates" class="toggle-label"></label>
+                                        </div>
+                                    </div>
+                                    <div class="notification-option">
+                                        <div class="notification-info">
+                                            <h5>Newsletters</h5>
+                                            <p>Recevez nos newsletters avec des conseils et actualités sur l'emploi</p>
+                                        </div>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" id="newsletters" class="toggle-input">
+                                            <label for="newsletters" class="toggle-label"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="settings-section danger-zone">
+                                <h4>Zone de danger</h4>
+                                <p>Attention, ces actions sont irréversibles</p>
+                                <button id="delete-account-btn" class="btn btn-danger">Supprimer mon compte</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 JobConnect. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Vérifier si l'utilisateur est authentifié
+            if (!requireAuth()) {
+                return;
+            }
+            
+            // Récupérer les informations de l'utilisateur
+            const user = getCurrentUser();
+            
+            // Mettre à jour la navigation selon le rôle
+            updateNavigation(user);
+            
+            // Afficher les informations de base de l'utilisateur
+            document.getElementById('user-name').textContent = user.name;
+            document.getElementById('user-role').textContent = getRoleText(user.role);
+            
+            // Charger le profil complet
+            await loadUserProfile();
+            
+            // Gérer les onglets
+            const tabButtons = document.querySelectorAll('.profile-nav-item');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Retirer la classe active de tous les boutons et onglets
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.profile-tab').forEach(tab => tab.classList.remove('active'));
+                    
+                    // Ajouter la classe active au bouton cliqué
+                    this.classList.add('active');
+                    
+                    // Afficher l'onglet correspondant
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Gérer les formulaires d'édition
+            document.getElementById('edit-personal-info').addEventListener('click', function() {
+                document.getElementById('personal-info-view').style.display = 'none';
+                document.getElementById('personal-info-form').style.display = 'block';
+            });
+            
+            document.getElementById('cancel-personal').addEventListener('click', function() {
+                document.getElementById('personal-info-form').style.display = 'none';
+                document.getElementById('personal-info-view').style.display = 'block';
+            });
+            
+            document.getElementById('edit-professional-info').addEventListener('click', function() {
+                document.getElementById('professional-info-view').style.display = 'none';
+                document.getElementById('professional-info-form').style.display = 'block';
+            });
+            
+            document.getElementById('cancel-professional').addEventListener('click', function() {
+                document.getElementById('professional-info-form').style.display = 'none';
+                document.getElementById('professional-info-view').style.display = 'block';
+            });
+            
+            // Gérer la soumission des formulaires
+            document.getElementById('personal-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await updatePersonalInfo();
+            });
+            
+            document.getElementById('professional-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await updateProfessionalInfo();
+            });
+            
+            document.getElementById('password-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await updatePassword();
+            });
+            
+            document.getElementById('cv-upload-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await uploadCV();
+            });
+            
+            document.getElementById('document-upload-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await uploadDocument();
+            });
+            
+            // Gérer la suppression du compte
+            document.getElementById('delete-account-btn').addEventListener('click', function() {
+                if (confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
+                    deleteAccount();
+                }
+            });
+            
+            // Gérer la déconnexion
+            document.getElementById('logout-btn').addEventListener('click', async function(e) {
+                e.preventDefault();
+                await logout();
+                window.location.href = '../../index.html';
+            });
+            
+            // Menu mobile
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+        });
+        
+        // Mettre à jour la navigation selon le rôle
+        function updateNavigation(user) {
+            const dashboardLink = document.getElementById('dashboard-link');
+            
+            if (user.role === 'candidat') {
+                dashboardLink.querySelector('a').href = '../candidat/dashboard.html';
+                document.getElementById('annonces-link').style.display = 'block';
+                document.getElementById('candidatures-link').style.display = 'block';
+            } else if (user.role === 'recruteur') {
+                dashboardLink.querySelector('a').href = '../recruteur/dashboard.html';
+            } else if (user.role === 'admin') {
+                dashboardLink.querySelector('a').href = '../admin/dashboard.html';
+            }
+        }
+        
+        // Charger le profil complet de l'utilisateur
+        async function loadUserProfile() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('profile-tabs').style.display = 'none';
+            
+            try {
+                // Simuler le chargement du profil (à remplacer par un appel API réel)
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                const user = getCurrentUser();
+                
+                // Remplir les champs du formulaire avec les données existantes
+                document.getElementById('name').value = user.name || '';
+                document.getElementById('email').value = user.email || '';
+                
+                // Afficher les informations personnelles
+                document.getElementById('display-name').textContent = user.name || '-';
+                document.getElementById('display-email').textContent = user.email || '-';
+                document.getElementById('display-phone').textContent = user.phone || '-';
+                document.getElementById('display-address').textContent = user.address || '-';
+                document.getElementById('display-city').textContent = user.city || '-';
+                document.getElementById('display-postal-code').textContent = user.postal_code || '-';
+                document.getElementById('display-country').textContent = user.country || '-';
+                
+                // Afficher les informations professionnelles
+                document.getElementById('display-title').textContent = user.title || '-';
+                document.getElementById('display-company').textContent = user.company || '-';
+                document.getElementById('display-sector').textContent = user.sector || '-';
+                document.getElementById('display-experience').textContent = formatExperience(user.experience) || '-';
+                document.getElementById('display-education').textContent = user.education || '-';
+                document.getElementById('display-skills').textContent = user.skills || '-';
+                document.getElementById('display-bio').textContent = user.bio || '-';
+                
+                // Masquer le chargement et afficher les onglets
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('profile-tabs').style.display = 'block';
+            } catch (error) {
+                console.error('Erreur lors du chargement du profil:', error);
+                document.getElementById('loading').style.display = 'none';
+                alert('Une erreur est survenue lors du chargement de votre profil.');
+            }
+        }
+        
+        // Mettre à jour les informations personnelles
+        async function updatePersonalInfo() {
+            try {
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    postal_code: document.getElementById('postal_code').value,
+                    country: document.getElementById('country').value
+                };
+                
+                // Simuler la mise à jour (à remplacer par un appel API réel)
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Mettre à jour les informations affichées
+                document.getElementById('display-name').textContent = formData.name || '-';
+                document.getElementById('display-email').textContent = formData.email || '-';
+                document.getElementById('display-phone').textContent = formData.phone || '-';
+                document.getElementById('display-address').textContent = formData.address || '-';
+                document.getElementById('display-city').textContent = formData.city || '-';
+                document.getElementById('display-postal-code').textContent = formData.postal_code || '-';
+                document.getElementById('display-country').textContent = formData.country || '-';
+                
+                // Mettre à jour le nom affiché dans l'en-tête
+                document.getElementById('user-name').textContent = formData.name;
+                
+                // Mettre à jour les informations dans le localStorage
+                const user = getCurrentUser();
+                const updatedUser = { ...user, ...formData };
+                localStorage.setItem('auth_user', JSON.stringify(updatedUser));
+                
+                // Revenir à la vue
+                document.getElementById('personal-info-form').style.display = 'none';
+                document.getElementById('personal-info-view').style.display = 'block';
+                
+                alert('Vos informations personnelles ont été mises à jour avec succès.');
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour des informations personnelles:', error);
+                alert('Une erreur est survenue lors de la mise à jour de vos informations personnelles.');
+            }
+        }
+        
+        // Mettre à jour les informations professionnelles
+        async function updateProfessionalInfo() {
+            try {
+                const formData = {
+                    title: document.getElementById('title').value,
+                    company: document.getElementById('company').value,
+                    sector: document.getElementById('sector').value,
+                    experience: document.getElementById('experience').value,
+                    education: document.getElementById('education').value,
+                    skills: document.getElementById('skills').value,
+                    bio: document.getElementById('bio').value
+                };
+                
+                // Simuler la mise à jour (à remplacer par un appel API réel)
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Mettre à jour les informations affichées
+                document.getElementById('display-title').textContent = formData.title || '-';
+                document.getElementById('display-company').textContent = formData.company || '-';
+                document.getElementById('display-sector').textContent = formData.sector || '-';
+                document.getElementById('display-experience').textContent = formatExperience(formData.experience) || '-';
+                document.getElementById('display-education').textContent = formData.education || '-';
+                document.getElementById('display-skills').textContent = formData.skills || '-';
+                document.getElementById('display-bio').textContent = formData.bio || '-';
+                
+                // Mettre à jour les informations dans le localStorage
+                const user = getCurrentUser();
+                const updatedUser = { ...user, ...formData };
+                localStorage.setItem('auth_user', JSON.stringify(updatedUser));
+                
+                // Revenir à la vue
+                document.getElementById('professional-info-form').style.display = 'none';
+                document.getElementById('professional-info-view').style.display = 'block';
+                
+                alert('Vos informations professionnelles ont été mises à jour avec succès.');
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour des informations professionnelles:', error);
+                alert('Une erreur est survenue lors de la mise à jour de vos informations professionnelles.');
+            }
+        }
+        
+        // Mettre à jour le mot de passe
+        async function updatePassword() {
+            try {
+                const currentPassword = document.getElementById('current-password').value;
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                
+                if (newPassword !== confirmPassword) {
+                    alert('Les nouveaux mots de passe ne correspondent pas.');
+                    return;
+                }
+                
+                // Simuler la mise à jour (à remplacer par un appel API réel)
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Réinitialiser le formulaire
+                document.getElementById('password-form').reset();
+                
+                alert('Votre mot de passe a été mis à jour avec succès.');
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour du mot de passe:', error);
+                alert('Une erreur est survenue lors de la mise à jour de votre mot de passe.');
+            }
+        }
+        
+        // Télécharger un CV
+        async function uploadCV() {
+            try {
+                const fileInput = document.getElementById('cv-file');
+                const file = fileInput.files[0];
+                
+                if (!file) {
+                    alert('Veuillez sélectionner un fichier.');
+                    return;
+                }
+                
+                // Simuler le téléchargement (à remplacer par un appel API réel)
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Mettre à jour l'affichage
+                const cvStatus = document.getElementById('cv-status');
+                cvStatus.innerHTML = `
+                    <div class="document-item">
+                        <div class="document-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="document-info">
+                            <h5>${file.name}</h5>
+                            <p>Téléchargé le ${formatDate(new Date())}</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-outline document-action">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline document-action">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                // Réinitialiser le formulaire
+                document.getElementById('cv-upload-form').reset();
+                
+                alert('Votre CV a été téléchargé avec succès.');
+            } catch (error) {
+                console.error('Erreur lors du téléchargement du CV:', error);
+                alert('Une erreur est survenue lors du téléchargement de votre CV.');
+            }
+        }
+        
+        // Télécharger un document
+        async function uploadDocument() {
+            try {
+                const nameInput = document.getElementById('document-name');
+                const fileInput = document.getElementById('document-file');
+                
+                const name = nameInput.value;
+                const file = fileInput.files[0];
+                
+                if (!name || !file) {
+                    alert('Veuillez remplir tous les champs.');
+                    return;
+                }
+                
+                // Simuler le téléchargement (à remplacer par un appel API réel)
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Mettre à jour l'affichage
+                const documentsList = document.getElementById('documents-list');
+                
+                // Supprimer le message "Aucun document" s'il existe
+                const emptyState = documentsList.querySelector('.empty-state');
+                if (emptyState) {
+                    documentsList.removeChild(emptyState);
+                }
+                
+                // Ajouter le nouveau document
+                const documentItem = document.createElement('div');
+                documentItem.className = 'document-item';
+                documentItem.innerHTML = `
+                    <div class="document-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="document-info">
+                        <h5>${name}</h5>
+                        <p>Téléchargé le ${formatDate(new Date())}</p>
+                    </div>
+                    <div class="document-actions">
+                        <button class="btn btn-sm btn-outline document-action">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline document-action">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                documentsList.appendChild(documentItem);
+                
+                // Réinitialiser le formulaire
+                document.getElementById('document-upload-form').reset();
+                
+                alert('Votre document a été ajouté avec succès.');
+            } catch (error) {
+                console.error('Erreur lors du téléchargement du document:', error);
+                alert('Une erreur est survenue lors du téléchargement de votre document.');
+            }
+        }
+        
+        // Supprimer le compte
+        async function deleteAccount() {
+            try {
+                // Simuler la suppression (à remplacer par un appel API réel)
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Déconnecter l'utilisateur
+                await logout();
+                
+                // Rediriger vers la page d'accueil
+                window.location.href = '../../index.html?message=Votre compte a été supprimé avec succès.';
+            } catch (error) {
+                console.error('Erreur lors de la suppression du compte:', error);
+                alert('Une erreur est survenue lors de la suppression de votre compte.');
+            }
+        }
+        
+        // Fonctions utilitaires
+        function getRoleText(role) {
+            switch (role) {
+                case 'admin': return 'Administrateur';
+                case 'recruteur': return 'Recruteur';
+                case 'candidat': return 'Candidat';
+                default: return 'Utilisateur';
+            }
+        }
+        
+        function formatExperience(experience) {
+            switch (experience) {
+                case '0-1': return 'Moins d\'un an';
+                case '1-3': return '1 à 3 ans';
+                case '3-5': return '3 à 5 ans';
+                case '5-10': return '5 à 10 ans';
+                case '10+': return 'Plus de 10 ans';
+                default: return experience;
+            }
+        }
+        
+        function formatDate(date) {
+            return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+    </script>
+</body>
+</html>

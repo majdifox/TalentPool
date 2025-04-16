@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de l'offre - JobConnect</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <h1><a href="../../index.html">JobConnect</a></h1>
+            </div>
+            <nav class="main-nav">
+                <ul id="nav-links" class="nav-links">
+                    <li><a href="../../index.html">Accueil</a></li>
+                    <li id="dashboard-link" style="display: none;"><a href="../candidat/dashboard.html">Tableau de bord</a></li>
+                    <li id="annonces-link" style="display: none;"><a href="../candidat/annonces.html">Offres d'emploi</a></li>
+                    <li id="candidatures-link" style="display: none;"><a href="../candidat/candidatures.html">Mes candidatures</a></li>
+                    <li id="profil-link" style="display: none;"><a href="profil.html">Mon profil</a></li>
+                    <li id="login-link"><a href="../auth/login.html">Connexion</a></li>
+                    <li id="register-link"><a href="../auth/register.html" class="btn btn-primary">Inscription</a></li>
+                    <li id="logout-link" style="display: none;"><a href="#" id="logout-btn" class="btn btn-outline">Déconnexion</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="annonce-details-container">
+            <div class="breadcrumb">
+                <a href="../../index.html">Accueil</a> &gt; 
+                <a href="../candidat/annonces.html">Offres d'emploi</a> &gt; 
+                <span id="annonce-title-breadcrumb">Détails de l'offre</span>
+            </div>
+            
+            <div id="loading" class="loading">Chargement des détails de l'offre...</div>
+            
+            <div id="annonce-details" style="display: none;">
+                <div class="annonce-header-details">
+                    <div class="annonce-title-section">
+                        <h1 id="annonce-title">Titre de l'offre</h1>
+                        <div class="annonce-meta">
+                            <span class="contract-type" id="annonce-contract">Type de contrat</span>
+                            <span class="annonce-date" id="annonce-date">Date de publication</span>
+                        </div>
+                    </div>
+                    <div class="annonce-actions">
+                        <button id="postuler-btn" class="btn btn-primary">Postuler</button>
+                        <button id="save-btn" class="btn btn-outline"><i class="far fa-bookmark"></i> Sauvegarder</button>
+                    </div>
+                </div>
+                
+                <div class="annonce-company-info">
+                    <div class="company-logo">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="company-details">
+                        <h3 id="company-name">Nom de l'entreprise</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> <span id="annonce-location">Localisation</span></p>
+                    </div>
+                </div>
+                
+                <div class="annonce-content">
+                    <div class="annonce-section">
+                        <h3>Description du poste</h3>
+                        <div id="annonce-description">
+                            <!-- Description de l'annonce -->
+                        </div>
+                    </div>
+                    
+                    <div class="annonce-section">
+                        <h3>Profil recherché</h3>
+                        <div id="annonce-profile">
+                            <!-- Profil recherché -->
+                        </div>
+                    </div>
+                    
+                    <div class="annonce-section">
+                        <h3>Informations complémentaires</h3>
+                        <div class="annonce-info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Salaire</div>
+                                <div class="info-value" id="annonce-salary">Non précisé</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Expérience</div>
+                                <div class="info-value" id="annonce-experience">Non précisé</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Niveau d'études</div>
+                                <div class="info-value" id="annonce-education">Non précisé</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Télétravail</div>
+                                <div class="info-value" id="annonce-remote">Non précisé</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="error-message" class="error-message" style="display: none;">
+                Impossible de charger les détails de l'offre. Veuillez réessayer plus tard.
+            </div>
+        </div>
+        
+        <!-- Modal de candidature -->
+        <div id="candidature-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Postuler à l'offre</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="candidature-form">
+                        <div class="form-group">
+                            <label for="lettre-motivation">Lettre de motivation</label>
+                            <textarea id="lettre-motivation" name="lettre_motivation" rows="6" placeholder="Expliquez pourquoi vous êtes intéressé par ce poste et ce que vous pouvez apporter..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cv">CV (PDF)</label>
+                            <input type="file" id="cv" name="cv" accept=".pdf" required>
+                            <div class="file-info">Format accepté: PDF. Taille max: 5 Mo</div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" id="cancel-candidature">Annuler</button>
+                            <button type="submit" class="btn btn-primary" id="submit-candidature">Envoyer ma candidature</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 JobConnect. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/annonces.js"></script>
+    <script src="../../js/candidatures.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Vérifier l'authentification et mettre à jour la navigation
+            updateNavigation();
+            
+            // Récupérer l'ID de l'annonce depuis l'URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const annonceId = urlParams.get('id');
+            
+            if (!annonceId) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error-message').textContent = 'Aucune offre spécifiée.';
+                document.getElementById('error-message').style.display = 'block';
+                return;
+            }
+            
+            try {
+                // Charger les détails de l'annonce
+                const annonce = await getAnnonceById(annonceId);
+                
+                // Mettre à jour le titre dans le breadcrumb
+                document.getElementById('annonce-title-breadcrumb').textContent = annonce.titre;
+                
+                // Remplir les détails de l'annonce
+                document.getElementById('annonce-title').textContent = annonce.titre;
+                document.getElementById('annonce-contract').textContent = annonce.type_contrat;
+                document.getElementById('annonce-date').textContent = `Publiée le ${formatDate(annonce.created_at)}`;
+                document.getElementById('company-name').textContent = annonce.entreprise || 'Entreprise non précisée';
+                document.getElementById('annonce-location').textContent = annonce.localisation;
+                
+                // Contenu HTML pour la description et le profil
+                document.getElementById('annonce-description').innerHTML = annonce.description || 'Aucune description fournie.';
+                document.getElementById('annonce-profile').innerHTML = annonce.profil_recherche || 'Aucun profil spécifié.';
+                
+                // Informations complémentaires
+                document.getElementById('annonce-salary').textContent = annonce.salaire ? formatSalary(annonce.salaire) : 'Non précisé';
+                document.getElementById('annonce-experience').textContent = annonce.experience || 'Non précisé';
+                document.getElementById('annonce-education').textContent = annonce.niveau_etudes || 'Non précisé';
+                document.getElementById('annonce-remote').textContent = annonce.teletravail ? 'Oui' : 'Non';
+                
+                // Afficher les détails
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('annonce-details').style.display = 'block';
+                
+                // Gérer le bouton Postuler
+                const postulerBtn = document.getElementById('postuler-btn');
+                
+                if (isAuthenticated()) {
+                    const user = getCurrentUser();
+                    
+                    if (user.role === 'candidat') {
+                        postulerBtn.addEventListener('click', function() {
+                            document.getElementById('candidature-modal').style.display = 'block';
+                        });
+                    } else {
+                        postulerBtn.textContent = 'Connectez-vous en tant que candidat pour postuler';
+                        postulerBtn.disabled = true;
+                    }
+                } else {
+                    postulerBtn.textContent = 'Connectez-vous pour postuler';
+                    postulerBtn.addEventListener('click', function() {
+                        window.location.href = '../auth/login.html?redirect=' + encodeURIComponent(window.location.href);
+                    });
+                }
+                
+                // Gérer le formulaire de candidature
+                document.getElementById('candidature-form').addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const submitBtn = document.getElementById('submit-candidature');
+                    submitBtn.textContent = 'Envoi en cours...';
+                    submitBtn.disabled = true;
+                    
+                    const formData = new FormData();
+                    formData.append('annonce_id', annonceId);
+                    formData.append('lettre_motivation', document.getElementById('lettre-motivation').value);
+                    formData.append('cv', document.getElementById('cv').files[0]);
+                    
+                    try {
+                        await createCandidature(formData);
+                        alert('Votre candidature a été envoyée avec succès !');
+                        document.getElementById('candidature-modal').style.display = 'none';
+                        
+                        // Rediriger vers la page des candidatures
+                        window.location.href = '../candidat/candidatures.html';
+                    } catch (error) {
+                        console.error('Erreur lors de l\'envoi de la candidature:', error);
+                        alert('Une erreur est survenue lors de l\'envoi de votre candidature. Veuillez réessayer.');
+                        
+                        submitBtn.textContent = 'Envoyer ma candidature';
+                        submitBtn.disabled = false;
+                    }
+                });
+                
+                // Fermer la modal
+                document.querySelector('.close').addEventListener('click', function() {
+                    document.getElementById('candidature-modal').  function() {
+                    document.getElementById('candidature-modal').style.display = 'none';
+                });
+                
+                document.getElementById('cancel-candidature').addEventListener('click', function() {
+                    document.getElementById('candidature-modal').style.display = 'none';
+                });
+                
+                // Fermer la modal si on clique en dehors
+                window.addEventListener('click', function(event) {
+                    const modal = document.getElementById('candidature-modal');
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Erreur lors du chargement des détails de l\'annonce:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error-message').style.display = 'block';
+            }
+        });
+        
+        // Mettre à jour la navigation selon l'état d'authentification
+        function updateNavigation() {
+            if (isAuthenticated()) {
+                const user = getCurrentUser();
+                
+                // Masquer les liens de connexion/inscription
+                document.getElementById('login-link').style.display = 'none';
+                document.getElementById('register-link').style.display = 'none';
+                
+                // Afficher les liens appropriés selon le rôle
+                if (user.role === 'candidat') {
+                    document.getElementById('dashboard-link').style.display = 'block';
+                    document.getElementById('annonces-link').style.display = 'block';
+                    document.getElementById('candidatures-link').style.display = 'block';
+                    document.getElementById('profil-link').style.display = 'block';
+                    document.getElementById('logout-link').style.display = 'block';
+                } else if (user.role === 'recruteur') {
+                    document.getElementById('dashboard-link').href = '../recruteur/dashboard.html';
+                    document.getElementById('dashboard-link').style.display = 'block';
+                    document.getElementById('profil-link').style.display = 'block';
+                    document.getElementById('logout-link').style.display = 'block';
+                } else if (user.role === 'admin') {
+                    document.getElementById('dashboard-link').href = '../admin/dashboard.html';
+                    document.getElementById('dashboard-link').style.display = 'block';
+                    document.getElementById('profil-link').style.display = 'block';
+                    document.getElementById('logout-link').style.display = 'block';
+                }
+                
+                // Gérer la déconnexion
+                document.getElementById('logout-btn').addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    await logout();
+                    window.location.href = '../../index.html';
+                });
+            }
+        }
+        
+        // Formater la date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+        
+        // Formater le salaire
+        function formatSalary(salary) {
+            return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(salary);
+        }
+    </script>
+</body>
+</html>

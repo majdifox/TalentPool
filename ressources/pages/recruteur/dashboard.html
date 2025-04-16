@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord Recruteur - JobConnect</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <h1><a href="../../index.html">JobConnect</a></h1>
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">Accueil</a></li>
+                    <li><a href="dashboard.html" class="active">Tableau de bord</a></li>
+                    <li><a href="annonces.html">Mes offres</a></li>
+                    <li><a href="candidatures.html">Candidatures</a></li>
+                    <li><a href="stats.html">Statistiques</a></li>
+                    <li><a href="../common/profil.html">Mon profil</a></li>
+                    <li><a href="#" id="logout-btn" class="btn btn-outline">Déconnexion</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2>Tableau de bord Recruteur</h2>
+                <p>Bienvenue, <span id="user-name">Utilisateur</span></p>
+                <a href="annonces.html?action=new" class="btn btn-primary"><i class="fas fa-plus"></i> Publier une offre</a>
+            </div>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Offres publiées</h3>
+                        <p class="stat-number" id="annonces-count">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Candidatures reçues</h3>
+                        <p class="stat-number" id="candidatures-count">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Vues totales</h3>
+                        <p class="stat-number" id="views-count">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Candidats acceptés</h3>
+                        <p class="stat-number" id="accepted-count">0</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="dashboard-row">
+                    <div class="dashboard-section chart-section">
+                        <div class="section-header">
+                            <h3>Candidatures par statut</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="candidatures-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-section">
+                        <div class="section-header">
+                            <h3>Dernières candidatures</h3>
+                            <a href="candidatures.html" class="btn btn-sm btn-outline">Voir tout</a>
+                        </div>
+                        <div class="candidatures-list" id="recent-candidatures">
+                            <div class="loading">Chargement...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>Mes offres d'emploi</h3>
+                        <a href="annonces.html" class="btn btn-sm btn-outline">Voir tout</a>
+                    </div>
+                    <div class="annonces-list" id="my-annonces">
+                        <div class="loading">Chargement...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 JobConnect. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/annonces.js"></script>
+    <script src="../../js/candidatures.js"></script>
+    <script src="../../js/statistiques.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Vérifier si l'utilisateur est authentifié
+            if (!requireAuth()) {
+                return;
+            }
+            
+            // Vérifier si l'utilisateur est un recruteur
+            const user = JSON.parse(localStorage.getItem('auth_user') || '{}');
+            if (user.role !== 'recruteur') {
+                if (user.role === 'candidat') {
+                    window.location.href = '../candidat/dashboard.html';
+                } else if (user.role === 'admin') {
+                    window.location.href = '../admin/dashboard.html';
+                } else {
+                    logout();
+                    window.location.href = '../auth/login.html';
+                }
+                return;
+            }
+            
+            // Afficher le nom de l'utilisateur
+            document.getElementById('user-name').textContent = user.name;
+            
+            try {
+                // Charger les statistiques du recruteur
+                const stats = await getRecruteurStats();
+                
+                // Mettre à jour les compteurs
+                document.getElementById('annonces-count').textContent = stats.annonces_count || 0;
+                document.getElementById('candidatures-count').textContent = stats.candidatures_count || 0;
+                document.getElementById('views-count').textContent = stats.total_views || 0;
+                document.getElementById('accepted-count').textContent = stats.accepted_candidates || 0;
+                
+                // Créer le graphique des candidatures par statut
+                const ctx = document.getElementById('candidatures-chart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['En attente', 'En cours', 'Acceptées', 'Refusées'],
+                        datasets: [{
+                            data: [
+                                stats.candidatures_by_status?.en_attente || 0,
+                                stats.candidatures_by_status?.en_cours || 0,
+                                stats.candidatures_by_status?.acceptee || 0,
+                                stats.candidatures_by_status?.refusee || 0
+                            ],
+                            backgroundColor: [
+                                '#FFC107',
+                                '#2196F3',
+                                '#4CAF50',
+                                '#F44336'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+                
+                // Charger les dernières candidatures
+                const candidatures = await getCandidaturesByRecruteur();
+                const recentCandidaturesContainer = document.getElementById('recent-candidatures');
+                recentCandidaturesContainer.innerHTML = '';
+                
+                if (candidatures.length === 0) {
+                    recentCandidaturesContainer.innerHTML = '<div class="empty-state">Aucune candidature reçue pour le moment.</div>';
+                } else {
+                    // Afficher les 5 dernières candidatures
+                    const recentCandidatures = candidatures.slice(0, 5);
+                    
+                    recentCandidatures.forEach(candidature => {
+                        const statusClass = getStatusClass(candidature.statut);
+                        const statusText = getStatusText(candidature.statut);
+                        
+                        recentCandidaturesContainer.innerHTML += `
+                            <div class="candidature-card">
+                                <div class="candidature-header">
+                                    <h4>${candidature.user.name}</h4>
+                                    <span class="status ${statusClass}">${statusText}</span>
+                                </div>
+                                <div class="candidature-details">
+                                    <p><i class="fas fa-briefcase"></i> ${candidature.annonce.titre}</p>
+                                    <p><i class="fas fa-envelope"></i> ${candidature.user.email}</p>
+                                    <p><i class="fas fa-calendar-alt"></i> Reçue le ${formatDate(candidature.created_at)}</p>
+                                </div>
+                                <div class="candidature-actions">
+                                    <a href="candidatures.html?id=${candidature.id}" class="btn btn-sm btn-outline">Détails</a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                // Charger les offres d'emploi du recruteur
+                const annonces = await getMesAnnonces();
+                const myAnnoncesContainer = document.getElementById('my-annonces');
+                myAnnoncesContainer.innerHTML = '';
+                
+                if (annonces.length === 0) {
+                    myAnnoncesContainer.innerHTML = '<div class="empty-state">Vous n\'avez pas encore publié d\'offres. <a href="annonces.html?action=new">Publier une offre</a></div>';
+                } else {
+                    // Afficher les 5 dernières offres
+                    const recentAnnonces = annonces.slice(0, 5);
+                    
+                    recentAnnonces.forEach(annonce => {
+                        myAnnoncesContainer.innerHTML += `
+                            <div class="annonce-card">
+                                <div class="annonce-header">
+                                    <h4>${annonce.titre}</h4>
+                                    <span class="contract-type">${annonce.type_contrat}</span>
+                                </div>
+                                <div class="annonce-details">
+                                    <p><i class="fas fa-map-marker-alt"></i> ${annonce.localisation}</p>
+                                    <p><i class="fas fa-money-bill-wave"></i> ${annonce.salaire ? formatSalary(annonce.salaire) : 'Non précisé'}</p>
+                                    <p><i class="fas fa-users"></i> ${annonce.candidatures_count || 0} candidature(s)</p>
+                                </div>
+                                <div class="annonce-actions">
+                                    <a href="../common/annonce-details.html?id=${annonce.id}" class="btn btn-sm btn-outline">Voir</a>
+                                    <a href="annonces.html?action=edit&id=${annonce.id}" class="btn btn-sm btn-outline">Modifier</a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des données:', error);
+            }
+            
+            // Gérer la déconnexion
+            document.getElementById('logout-btn').addEventListener('click', async function(e) {
+                e.preventDefault();
+                await logout();
+                window.location.href = '../../index.html';
+            });
+            
+            // Menu mobile
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+        });
+        
+        // Fonctions utilitaires
+        function getStatusClass(status) {
+            switch (status) {
+                case 'en_attente': return 'status-pending';
+                case 'en_cours': return 'status-in-progress';
+                case 'acceptee': return 'status-accepted';
+                case 'refusee': return 'status-rejected';
+                default: return 'status-pending';
+            }
+        }
+        
+        function getStatusText(status) {
+            switch (status) {
+                case 'en_attente': return 'En attente';
+                case 'en_cours': return 'En cours';
+                case 'acceptee': return 'Acceptée';
+                case 'refusee': return 'Refusée';
+                default: return 'En attente';
+            }
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+        
+        function formatSalary(salary) {
+            return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(salary);
+        }
+    </script>
+</body>
+</html>

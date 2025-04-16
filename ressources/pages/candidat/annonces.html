@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offres d'emploi - JobConnect</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <h1><a href="../../index.html">JobConnect</a></h1>
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">Accueil</a></li>
+                    <li><a href="dashboard.html">Tableau de bord</a></li>
+                    <li><a href="annonces.html" class="active">Offres d'emploi</a></li>
+                    <li><a href="candidatures.html">Mes candidatures</a></li>
+                    <li><a href="../common/profil.html">Mon profil</a></li>
+                    <li><a href="#" id="logout-btn" class="btn btn-outline">Déconnexion</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="annonces-container">
+            <div class="annonces-header">
+                <h2>Offres d'emploi</h2>
+                <p>Trouvez l'offre qui correspond à vos compétences et aspirations</p>
+            </div>
+            
+            <div class="search-filters">
+                <form id="search-form">
+                    <div class="search-row">
+                        <div class="search-input">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-keyword" placeholder="Titre, compétence, entreprise...">
+                        </div>
+                        <div class="search-input">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <input type="text" id="search-location" placeholder="Ville, région, pays...">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Rechercher</button>
+                    </div>
+                    
+                    <div class="filters-toggle">
+                        <button type="button" id="toggle-filters" class="btn btn-sm btn-outline">
+                            <i class="fas fa-filter"></i> Filtres avancés
+                        </button>
+                    </div>
+                    
+                    <div id="advanced-filters" class="advanced-filters" style="display: none;">
+                        <div class="filters-grid">
+                            <div class="filter-group">
+                                <label>Type de contrat</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="contract-cdi" name="contract[]" value="CDI">
+                                        <label for="contract-cdi">CDI</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="contract-cdd" name="contract[]" value="CDD">
+                                        <label for="contract-cdd">CDD</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="contract-stage" name="contract[]" value="Stage">
+                                        <label for="contract-stage">Stage</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="contract-alternance" name="contract[]" value="Alternance">
+                                        <label for="contract-alternance">Alternance</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="contract-freelance" name="contract[]" value="Freelance">
+                                        <label for="contract-freelance">Freelance</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label>Expérience</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="exp-junior" name="experience[]" value="Débutant">
+                                        <label for="exp-junior">Débutant</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="exp-mid" name="experience[]" value="Intermédiaire">
+                                        <label for="exp-mid">Intermédiaire</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="exp-senior" name="experience[]" value="Expérimenté">
+                                        <label for="exp-senior">Expérimenté</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label>Salaire minimum</label>
+                                <select id="salary-min" name="salary_min">
+                                    <option value="">Tous</option>
+                                    <option value="20000">20 000 €</option>
+                                    <option value="30000">30 000 €</option>
+                                    <option value="40000">40 000 €</option>
+                                    <option value="50000">50 000 €</option>
+                                    <option value="60000">60 000 €</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label>Télétravail</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="remote-yes" name="remote" value="1">
+                                        <label for="remote-yes">Télétravail possible</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="filters-actions">
+                            <button type="reset" class="btn btn-sm btn-outline">Réinitialiser</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Appliquer les filtres</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="annonces-results">
+                <div class="results-header">
+                    <div class="results-count">
+                        <span id="results-count">0</span> offres trouvées
+                    </div>
+                    <div class="results-sort">
+                        <label for="sort-by">Trier par:</label>
+                        <select id="sort-by">
+                            <option value="date-desc">Date (récent)</option>
+                            <option value="date-asc">Date (ancien)</option>
+                            <option value="salary-desc">Salaire (décroissant)</option>
+                            <option value="salary-asc">Salaire (croissant)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="loading" class="loading">Chargement des offres...</div>
+                
+                <div id="annonces-list" class="annonces-list">
+                    <!-- Les annonces seront ajoutées ici dynamiquement -->
+                </div>
+                
+                <div id="no-results" class="no-results" style="display: none;">
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>Aucune offre trouvée</h3>
+                        <p>Essayez de modifier vos critères de recherche</p>
+                    </div>
+                </div>
+                
+                <div class="pagination" id="pagination">
+                    <!-- Pagination sera ajoutée ici dynamiquement -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 JobConnect. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/annonces.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Vérifier si l'utilisateur est authentifié
+            if (!requireAuth()) {
+                return;
+            }
+            
+            // Vérifier si l'utilisateur est un candidat
+            const user = getCurrentUser();
+            if (user.role !== 'candidat') {
+                if (user.role === 'recruteur') {
+                    window.location.href = '../recruteur/dashboard.html';
+                } else if (user.role === 'admin') {
+                    window.location.href = '../admin/dashboard.html';
+                } else {
+                    logout();
+                    window.location.href = '../auth/login.html';
+                }
+                return;
+            }
+            
+            // Charger les annonces
+            await loadAnnonces();
+            
+            // Gérer le formulaire de recherche
+            document.getElementById('search-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await loadAnnonces();
+            });
+            
+            // Gérer le tri
+            document.getElementById('sort-by').addEventListener('change', async function() {
+                await loadAnnonces();
+            });
+            
+            // Gérer les filtres avancés
+            document.getElementById('toggle-filters').addEventListener('click', function() {
+                const filtersSection = document.getElementById('advanced-filters');
+                if (filtersSection.style.display === 'none') {
+                    filtersSection.style.display = 'block';
+                    this.innerHTML = '<i class="fas fa-times"></i> Masquer les filtres';
+                } else {
+                    filtersSection.style.display = 'none';
+                    this.innerHTML = '<i class="fas fa-filter"></i> Filtres avancés';
+                }
+            });
+            
+            // Réinitialiser les filtres
+            document.querySelector('button[type="reset"]').addEventListener('click', function() {
+                document.getElementById('search-keyword').value = '';
+                document.getElementById('search-location').value = '';
+                document.getElementById('salary-min').value = '';
+                
+                // Décocher toutes les cases
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            });
+            
+            // Gérer la déconnexion
+            document.getElementById('logout-btn').addEventListener('click', async function(e) {
+                e.preventDefault();
+                await logout();
+                window.location.href = '../../index.html';
+            });
+            
+            // Menu mobile
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+        });
+        
+        // Charger les annonces avec filtres
+        async function loadAnnonces() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('annonces-list').innerHTML = '';
+            document.getElementById('no-results').style.display = 'none';
+            
+            // Récupérer les valeurs des filtres
+            const keyword = document.getElementById('search-keyword').value;
+            const location = document.getElementById('search-location').value;
+            const salaryMin = document.getElementById('salary-min').value;
+            const remote = document.getElementById('remote-yes').checked ? 1 : '';
+            
+            // Récupérer les types de contrat sélectionnés
+            const contractCheckboxes = document.querySelectorAll('input[name="contract[]"]:checked');
+            const contracts = Array.from(contractCheckboxes).map(cb => cb.value);
+            
+            // Récupérer les expériences sélectionnées
+            const experienceCheckboxes = document.querySelectorAll('input[name="experience[]"]:checked');
+            const experiences = Array.from(experienceCheckboxes).map(cb => cb.value);
+            
+            // Récupérer le tri
+            const sortBy = document.getElementById('sort-by').value;
+            
+            // Construire l'objet de recherche
+            const searchParams = {
+                keyword: keyword,
+                location: location,
+                salary_min: salaryMin,
+                remote: remote,
+                contract: contracts.join(','),
+                experience: experiences.join(','),
+                sort: sortBy
+            };
+            
+            try {
+                const annonces = await searchAnnonces(searchParams);
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('results-count').textContent = annonces.length;
+                
+                if (annonces.length === 0) {
+                    document.getElementById('no-results').style.display = 'block';
+                } else {
+                    const annoncesList = document.getElementById('annonces-list');
+                    
+                    annonces.forEach(annonce => {
+                        const annonceCard = document.createElement('div');
+                        annonceCard.className = 'annonce-card';
+                        
+                        annonceCard.innerHTML = `
+                            <div class="annonce-header">
+                                <h3>${annonce.titre}</h3>
+                                <span class="contract-type">${annonce.type_contrat}</span>
+                            </div>
+                            <div class="annonce-company">
+                                <span class="company-name">${annonce.entreprise || 'Entreprise'}</span>
+                                <span class="annonce-location"><i class="fas fa-map-marker-alt"></i> ${annonce.localisation}</span>
+                            </div>
+                            <div class="annonce-details">
+                                <p class="annonce-description">${truncateText(annonce.description, 150)}</p>
+                                <div class="annonce-meta">
+                                    ${annonce.salaire ? `<span class="annonce-salary"><i class="fas fa-money-bill-wave"></i> ${formatSalary(annonce.salaire)}</span>` : ''}
+                                    <span class="annonce-date"><i class="fas fa-calendar-alt"></i> ${formatDate(annonce.created_at)}</span>
+                                </div>
+                            </div>
+                            <div class="annonce-actions">
+                                <a href="../common/annonce-details.html?id=${annonce.id}" class="btn btn-primary">Voir l'offre</a>
+                            </div>
+                        `;
+                        
+                        annoncesList.appendChild(annonceCard);
+                    });
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des annonces:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('no-results').style.display = 'block';
+                document.getElementById('no-results').querySelector('p').textContent = 'Une erreur est survenue lors du chargement des offres.';
+            }
+        }
+        
+        // Formater la date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+        
+        // Formater le salaire
+        function formatSalary(salary) {
+            return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(salary);
+        }
+        
+        // Tronquer le texte
+        function truncateText(text, maxLength) {
+            if (!text) return '';
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+    </script>
+</body>
+</html>

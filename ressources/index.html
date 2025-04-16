@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plateforme de Recrutement</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <h1>JobConnect</h1>
+            </div>
+            <nav class="main-nav">
+                <ul id="nav-anonymous" class="nav-links">
+                    <li><a href="index.html" class="active">Accueil</a></li>
+                    <li><a href="pages/auth/login.html">Connexion</a></li>
+                    <li><a href="pages/auth/register.html" class="btn btn-primary">Inscription</a></li>
+                </ul>
+                <ul id="nav-authenticated" class="nav-links" style="display: none;">
+                    <li><a href="index.html" class="active">Accueil</a></li>
+                    <li><a href="#" id="dashboard-link">Tableau de bord</a></li>
+                    <li><a href="pages/common/profil.html">Mon profil</a></li>
+                    <li><a href="#" id="logout-btn" class="btn btn-outline">Déconnexion</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Trouvez votre emploi idéal ou le candidat parfait</h2>
+                <p>Plateforme de mise en relation entre candidats et recruteurs</p>
+                <div class="hero-buttons">
+                    <a href="pages/auth/register.html?role=candidat" class="btn btn-primary">Je cherche un emploi</a>
+                    <a href="pages/auth/register.html?role=recruteur" class="btn btn-secondary">Je recrute</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Nos services</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Recherche d'emploi</h3>
+                    <p>Trouvez des offres d'emploi correspondant à vos compétences et aspirations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Gestion de candidatures</h3>
+                    <p>Suivez l'état de vos candidatures et restez informé des réponses.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Recrutement efficace</h3>
+                    <p>Publiez vos offres et trouvez les meilleurs talents pour votre entreprise.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Statistiques détaillées</h3>
+                    <p>Analysez vos performances de recrutement avec des statistiques précises.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Prêt à commencer ?</h2>
+                <p>Inscrivez-vous gratuitement et commencez à utiliser notre plateforme dès aujourd'hui.</p>
+                <a href="pages/auth/register.html" class="btn btn-primary">Créer un compte</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>JobConnect</h2>
+                    <p>La plateforme qui connecte talents et opportunités</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Liens rapides</h3>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="pages/auth/login.html">Connexion</a></li>
+                        <li><a href="pages/auth/register.html">Inscription</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-envelope"></i> contact@jobconnect.com</p>
+                    <p><i class="fas fa-phone"></i> +33 1 23 45 67 89</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 JobConnect. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Vérifier si l'utilisateur est connecté
+            const token = localStorage.getItem('auth_token');
+            const user = JSON.parse(localStorage.getItem('auth_user') || '{}');
+            
+            if (token && user.name) {
+                document.getElementById('nav-anonymous').style.display = 'none';
+                document.getElementById('nav-authenticated').style.display = 'flex';
+                
+                // Configurer le lien du tableau de bord en fonction du rôle
+                const dashboardLink = document.getElementById('dashboard-link');
+                if (user.role === 'admin') {
+                    dashboardLink.href = 'pages/admin/dashboard.html';
+                } else if (user.role === 'recruteur') {
+                    dashboardLink.href = 'pages/recruteur/dashboard.html';
+                } else {
+                    dashboardLink.href = 'pages/candidat/dashboard.html';
+                }
+            }
+            
+            // Gérer la déconnexion
+            document.getElementById('logout-btn').addEventListener('click', async function(e) {
+                e.preventDefault();
+                await logout();
+                window.location.href = 'index.html';
+            });
+            
+            // Menu mobile
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

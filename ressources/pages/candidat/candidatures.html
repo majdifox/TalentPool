@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes candidatures - JobConnect</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <h1><a href="../../index.html">JobConnect</a></h1>
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">Accueil</a></li>
+                    <li><a href="dashboard.html">Tableau de bord</a></li>
+                    <li><a href="annonces.html">Offres d'emploi</a></li>
+                    <li><a href="candidatures.html" class="active">Mes candidatures</a></li>
+                    <li><a href="../common/profil.html">Mon profil</a></li>
+                    <li><a href="#" id="logout-btn" class="btn btn-outline">Déconnexion</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="candidatures-container">
+            <div class="candidatures-header">
+                <h2>Mes candidatures</h2>
+                <p>Suivez l'état de vos candidatures</p>
+            </div>
+            
+            <div class="candidatures-filters">
+                <div class="filters-tabs">
+                    <button class="tab-btn active" data-filter="all">Toutes</button>
+                    <button class="tab-btn" data-filter="en_attente">En attente</button>
+                    <button class="tab-btn" data-filter="en_cours">En cours</button>
+                    <button class="tab-btn" data-filter="acceptee">Acceptées</button>
+                    <button class="tab-btn" data-filter="refusee">Refusées</button>
+                </div>
+                
+                <div class="search-input">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-candidature" placeholder="Rechercher une candidature...">
+                </div>
+            </div>
+            
+            <div id="loading" class="loading">Chargement de vos candidatures...</div>
+            
+            <div id="candidatures-list" class="candidatures-list">
+                <!-- Les candidatures seront ajoutées ici dynamiquement -->
+            </div>
+            
+            <div id="no-candidatures" class="no-candidatures" style="display: none;">
+                <div class="empty-state">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>Aucune candidature</h3>
+                    <p>Vous n'avez pas encore postulé à des offres d'emploi.</p>
+                    <a href="annonces.html" class="btn btn-primary">Parcourir les offres</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal de détails de candidature -->
+        <div id="candidature-details-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Détails de la candidature</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body" id="candidature-details-content">
+                    <div class="loading">Chargement des détails...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 JobConnect. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/candidatures.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Vérifier si l'utilisateur est authentifié
+            if (!requireAuth()) {
+                return;
+            }
+            
+            // Vérifier si l'utilisateur est un candidat
+            const user = getCurrentUser();
+            if (user.role !== 'candidat') {
+                if (user.role === 'recruteur') {
+                    window.location.href = '../recruteur/dashboard.html';
+                } else if (user.role === 'admin') {
+                    window.location.href = '../admin/dashboard.html';
+                } else {
+                    logout();
+                    window.location.href = '../auth/login.html';
+                }
+                return;
+            }
+            
+            // Charger les candidatures
+            await loadCandidatures();
+            
+            // Gérer les filtres par onglets
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Retirer la classe active de tous les boutons
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Ajouter la classe active au bouton cliqué
+                    this.classList.add('active');
+                    
+                    // Filtrer les candidatures
+                    const filter = this.getAttribute('data-filter');
+                    filterCandidatures(filter);
+                });
+            });
+            
+            // Gérer la recherche
+            document.getElementById('search-candidature').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                searchCandidatures(searchTerm);
+            });
+            
+            // Gérer la déconnexion
+            document.getElementById('logout-btn').addEventListener('click', async function(e) {
+                e.preventDefault();
+                await logout();
+                window.location.href = '../../index.html';
+            });
+            
+            // Menu mobile
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+            
+            // Fermer la modal
+            document.querySelector('.close').addEventListener('click', function() {
+                document.getElementById('candidature-details-modal').style.display = 'none';
+            });
+            
+            // Fermer la modal si on clique en dehors
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('candidature-details-modal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+        
+        // Variables globales pour stocker les candidatures
+        let allCandidatures = [];
+        
+        // Charger les candidatures
+        async function loadCandidatures() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('candidatures-list').innerHTML = '';
+            document.getElementById('no-candidatures').style.display = 'none';
+            
+            try {
+                const candidatures = await getCandidatures();
+                allCandidatures = candidatures;
+                
+                document.getElementById('loading').style.display = 'none';
+                
+                if (candidatures.length === 0) {
+                    document.getElementById('no-candidatures').style.display = 'block';
+                } else {
+                    renderCandidatures(candidatures);
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des candidatures:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('no-candidatures').style.display = 'block';
+                document.getElementById('no-candidatures').querySelector('p').textContent = 'Une erreur est survenue lors du chargement de vos candidatures.';
+            }
+        }
+        
+        // Afficher les candidatures
+        function renderCandidatures(candidatures) {
+            const candidaturesList = document.getElementById('candidatures-list');
+            candidaturesList.innerHTML = '';
+            
+            if (candidatures.length === 0) {
+                candidaturesList.innerHTML = `
+                    <div class="empty-state">
+                        <p>Aucune candidature ne correspond à votre recherche.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            candidatures.forEach(candidature => {
+                const statusClass = getStatusClass(candidature.statut);
+                const statusText = getStatusText(candidature.statut);
+                
+                const candidatureCard = document.createElement('div');
+                candidatureCard.className = 'candidature-card';
+                candidatureCard.setAttribute('data-status', candidature.statut);
+                
+                candidatureCard.innerHTML = `
+                    <div class="candidature-header">
+                        <h3>${candidature.annonce.titre}</h3>
+                        <span class="status ${statusClass}">${statusText}</span>
+                    </div>
+                    <div class="candidature-company">
+                        <span class="company-name">${candidature.annonce.entreprise || 'Entreprise'}</span>
+                        <span class="candidature-location"><i class="fas fa-map-marker-alt"></i> ${candidature.annonce.localisation}</span>
+                    </div>
+                    <div class="candidature-details">
+                        <div class="candidature-meta">
+                            <span class="candidature-date"><i class="fas fa-calendar-alt"></i> Postulé le ${formatDate(candidature.created_at)}</span>
+                            ${candidature.updated_at !== candidature.created_at ? 
+                                `<span class="candidature-update"><i class="fas fa-clock"></i> Mis à jour le ${formatDate(candidature.updated_at)}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="candidature-actions">
+                        <button class="btn btn-outline view-details" data-id="${candidature.id}">Voir les détails</button>
+                        <a href="../common/annonce-details.html?id=${candidature.annonce.id}" class="btn btn-outline">Voir l'offre</a>
+                    </div>
+                `;
+                
+                candidaturesList.appendChild(candidatureCard);
+            });
+            
+            // Ajouter les écouteurs d'événements pour les boutons de détails
+            document.querySelectorAll('.view-details').forEach(button => {
+                button.addEventListener('click', function() {
+                    const candidatureId = this.getAttribute('data-id');
+                    showCandidatureDetails(candidatureId);
+                });
+            });
+        }
+        
+        // Filtrer les candidatures par statut
+        function filterCandidatures(filter) {
+            if (filter === 'all') {
+                renderCandidatures(allCandidatures);
+            } else {
+                const filteredCandidatures = allCandidatures.filter(candidature => candidature.statut === filter);
+                renderCandidatures(filteredCandidatures);
+            }
+        }
+        
+        // Rechercher dans les candidatures
+        function searchCandidatures(searchTerm) {
+            if (!searchTerm) {
+                renderCandidatures(allCandidatures);
+                return;
+            }
+            
+            const filteredCandidatures = allCandidatures.filter(candidature => {
+                return (
+                    candidature.annonce.titre.toLowerCase().includes(searchTerm) ||
+                    (candidature.annonce.entreprise && candidature.annonce.entreprise.toLowerCase().includes(searchTerm)) ||
+                    candidature.annonce.localisation.toLowerCase().includes(searchTerm)
+                );
+            });
+            
+            renderCandidatures(filteredCandidatures);
+        }
+        
+        // Afficher les détails d'une candidature
+        async function showCandidatureDetails(candidatureId) {
+            const modal = document.getElementById('candidature-details-modal');
+            const modalContent = document.getElementById('candidature-details-content');
+            
+            modalContent.innerHTML = '<div class="loading">Chargement des détails...</div>';
+            modal.style.display = 'block';
+            
+            try {
+                const candidature = await getCandidatureById(candidatureId);
+                
+                const statusClass = getStatusClass(candidature.statut);
+                const statusText = getStatusText(candidature.statut);
+                
+                modalContent.innerHTML = `
+                    <div class="candidature-detail-header">
+                        <h3>${candidature.annonce.titre}</h3>
+                        <span class="status ${statusClass}">${statusText}</span>
+                    </div>
+                    
+                    <div class="candidature-detail-section">
+                        <h4>Informations sur l'offre</h4>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Entreprise</span>
+                                <span class="detail-value">${candidature.annonce.entreprise || 'Non précisé'}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Localisation</span>
+                                <span class="detail-value">${candidature.annonce.localisation}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Type de contrat</span>
+                                <span class="detail-value">${candidature.annonce.type_contrat}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Salaire</span>
+                                <span class="detail-value">${candidature.annonce.salaire ? formatSalary(candidature.annonce.salaire) : 'Non précisé'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="candidature-detail-section">
+                        <h4>Votre candidature</h4>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Date de candidature</span>
+                                <span class="detail-value">${formatDate(candidature.created_at)}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Dernière mise à jour</span>
+                                <span class="detail-value">${formatDate(candidature.updated_at)}</span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <span class="detail-label">Lettre de motivation</span>
+                                <div class="detail-value motivation-letter">
+                                    ${candidature.lettre_motivation || 'Aucune lettre de motivation fournie.'}
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">CV</span>
+                                <span class="detail-value">
+                                    <button id="download-cv-btn" class="btn btn-sm btn-outline">
+                                        <i class="fas fa-download"></i> Télécharger mon CV
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${candidature.feedback ? `
+                    <div class="candidature-detail-section">
+                        <h4>Retour du recruteur</h4>
+                        <div class="feedback-box">
+                            ${candidature.feedback}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="candidature-detail-actions">
+                        <a href="../common/annonce-details.html?id=${candidature.annonce.id}" class="btn btn-primary">Voir l'offre</a>
+                        ${candidature.statut === 'en_attente' ? `
+                        <button id="cancel-candidature-btn" class="btn btn-danger" data-id="${candidature.id}">
+                            Annuler ma candidature
+                        </button>
+                        ` : ''}
+                    </div>
+                `;
+                
+                // Ajouter l'écouteur d'événement pour le téléchargement du CV
+                document.getElementById('download-cv-btn').addEventListener('click', function() {
+                    downloadCV(candidatureId);
+                });
+                
+                // Ajouter l'écouteur d'événement pour l'annulation de candidature
+                const cancelBtn = document.getElementById('cancel-candidature-btn');
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', async function() {
+                        if (confirm('Êtes-vous sûr de vouloir annuler cette candidature ? Cette action est irréversible.')) {
+                            try {
+                                await deleteCandidature(candidatureId);
+                                alert('Votre candidature a été annulée avec succès.');
+                                modal.style.display = 'none';
+                                await loadCandidatures();
+                            } catch (error) {
+                                console.error('Erreur lors de l\'annulation de la candidature:', error);
+                                alert('Une erreur est survenue lors de l\'annulation de votre candidature.');
+                            }
+                        }
+                    });
+                }
+                
+            } catch (error) {
+                console.error('Erreur lors du chargement des détails de la candidature:', error);
+                modalContent.innerHTML = `
+                    <div class="error-message">
+                        Une erreur est survenue lors du chargement des détails de la candidature.
+                    </div>
+                `;
+            }
+        }
+        
+        // Fonctions utilitaires
+        function getStatusClass(status) {
+            switch (status) {
+                case 'en_attente': return 'status-pending';
+                case 'en_cours': return 'status-in-progress';
+                case 'acceptee': return 'status-accepted';
+                case 'refusee': return 'status-rejected';
+                default: return 'status-pending';
+            }
+        }
+        
+        function getStatusText(status) {
+            switch (status) {
+                case 'en_attente': return 'En attente';
+                case 'en_cours': return 'En cours';
+                case 'acceptee': return 'Acceptée';
+                case 'refusee': return 'Refusée';
+                default: return 'En attente';
+            }
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+        
+        function formatSalary(salary) {
+            return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(salary);
+        }
+    </script>
+</body>
+</html>

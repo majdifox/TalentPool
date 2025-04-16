@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - JobConnect</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <h1><a href="../../index.html">JobConnect</a></h1>
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">Accueil</a></li>
+                    <li><a href="dashboard.html" class="active">Administration</a></li>
+                    <li><a href="users.html">Utilisateurs</a></li>
+                    <li><a href="stats.html">Statistiques</a></li>
+                    <li><a href="../common/profil.html">Mon profil</a></li>
+                    <li><a href="#" id="logout-btn" class="btn btn-outline">Déconnexion</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2>Tableau de bord Administrateur</h2>
+                <p>Bienvenue, <span id="user-name">Administrateur</span></p>
+            </div>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Utilisateurs</h3>
+                        <p class="stat-number" id="users-count">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Recruteurs</h3>
+                        <p class="stat-number" id="recruteurs-count">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Candidats</h3>
+                        <p class="stat-number" id="candidats-count">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Offres</h3>
+                        <p class="stat-number" id="annonces-count">0</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="dashboard-row">
+                    <div class="dashboard-section chart-section">
+                        <div class="section-header">
+                            <h3>Répartition des utilisateurs</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="users-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-section chart-section">
+                        <div class="section-header">
+                            <h3>Activité mensuelle</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="activity-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>Derniers utilisateurs inscrits</h3>
+                        <a href="users.html" class="btn btn-sm btn-outline">Voir tout</a>
+                    </div>
+                    <div class="users-list" id="recent-users">
+                        <div class="loading">Chargement...</div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>Dernières offres publiées</h3>
+                        <a href="../common/annonces.html" class="btn btn-sm btn-outline">Voir tout</a>
+                    </div>
+                    <div class="annonces-list" id="recent-annonces">
+                        <div class="loading">Chargement...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 JobConnect. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/admin.js"></script>
+    <script src="../../js/statistiques.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Vérifier si l'utilisateur est authentifié
+            if (!requireAuth()) {
+                return;
+            }
+            
+            // Vérifier si l'utilisateur est un administrateur
+            const user = JSON.parse(localStorage.getItem('auth_user') || '{}');
+            if (user.role !== 'admin') {
+                if (user.role === 'candidat') {
+                    window.location.href = '../candidat/dashboard.html';
+                } else if (user.role === 'recruteur') {
+                    window.location.href = '../recruteur/dashboard.html';
+                } else {
+                    logout();
+                    window.location.href = '../auth/login.html';
+                }
+                return;
+            }
+            
+            // Afficher le nom de l'utilisateur
+            document.getElementById('user-name').textContent = user.name;
+            
+            try {
+                // Charger les statistiques globales
+                const stats = await getGlobalStats();
+                
+                // Mettre à jour les compteurs
+                document.getElementById('users-count').textContent = stats.users_count || 0;
+                document.getElementById('recruteurs-count').textContent = stats.recruteurs_count || 0;
+                document.getElementById('candidats-count').textContent = stats.candidats_count || 0;
+                document.getElementById('annonces-count').textContent = stats.annonces_count || 0;
+                
+                // Créer le graphique de répartition des utilisateurs
+                const usersCtx = document.getElementById('users-chart').getContext('2d');
+                new Chart(usersCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Candidats', 'Recruteurs', 'Administrateurs'],
+                        datasets: [{
+                            data: [
+                                stats.candidats_count || 0,
+                                stats.recruteurs_count || 0,
+                                stats.admins_count || 0
+                            ],
+                            backgroundColor: [
+                                '#4CAF50',
+                                '#2196F3',
+                                '#F44336'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+                
+                // Créer le graphique d'activité mensuelle
+                const activityCtx = document.getElementById('activity-chart').getContext('2d');
+                new Chart(activityCtx, {
+                    type: 'line',
+                    data: {
+                        labels: stats.monthly_activity?.map(item => item.month) || [],
+                        datasets: [
+                            {
+                                label: 'Inscriptions',
+                                data: stats.monthly_activity?.map(item => item.registrations) || [],
+                                borderColor: '#4CAF50',
+                                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Offres publiées',
+                                data: stats.monthly_activity?.map(item => item.annonces) || [],
+                                borderColor: '#2196F3',
+                                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Candidatures',
+                                data: stats.monthly_activity?.map(item => item.candidatures) || [],
+                                borderColor: '#FFC107',
+                                backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+                
+                // Charger les derniers utilisateurs inscrits
+                const users = await getUsers();
+                const recentUsersContainer = document.getElementById('recent-users');
+                recentUsersContainer.innerHTML = '';
+                
+                if (users.length === 0) {
+                    recentUsersContainer.innerHTML = '<div class="empty-state">Aucun utilisateur inscrit.</div>';
+                } else {
+                    // Afficher les 5 derniers utilisateurs
+                    const recentUsers = users.slice(0, 5);
+                    
+                    recentUsers.forEach(user => {
+                        const roleClass = getRoleClass(user.role);
+                        const roleText = getRoleText(user.role);
+                        
+                        recentUsersContainer.innerHTML += `
+                            <div class="user-card">
+                                <div class="user-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="user-details">
+                                    <h4>${user.name}</h4>
+                                    <p><i class="fas fa-envelope"></i> ${user.email}</p>
+                                    <p><i class="fas fa-user-tag"></i> <span class="role ${roleClass}">${roleText}</span></p>
+                                </div>
+                                <div class="user-actions">
+                                    <a href="users.html?id=${user.id}" class="btn btn-sm btn-outline">Détails</a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                // Charger les dernières offres publiées
+                const annonces = await getAnnonces();
+                const recentAnnoncesContainer = document.getElementById('recent-annonces');
+                recentAnnoncesContainer.innerHTML = '';
+                
+                if (annonces.length === 0) {
+                    recentAnnoncesContainer.innerHTML = '<div class="empty-state">Aucune offre publiée.</div>';
+                } else {
+                    // Afficher les 5 dernières offres
+                    const recentAnnonces = annonces.slice(0, 5);
+                    
+                    recentAnnonces.forEach(annonce => {
+                        recentAnnoncesContainer.innerHTML += `
+                            <div class="annonce-card">
+                                <div class="annonce-header">
+                                    <h4>${annonce.titre}</h4>
+                                    <span class="contract-type">${annonce.type_contrat}</span>
+                                </div>
+                                <div class="annonce-details">
+                                    <p><i class="fas fa-building"></i> ${annonce.entreprise || 'Entreprise'}</p>
+                                    <p><i class="fas fa-map-marker-alt"></i> ${annonce.localisation}</p>
+                                    <p><i class="fas fa-calendar-alt"></i> Publiée le ${formatDate(annonce.created_at)}</p>
+                                </div>
+                                <div class="annonce-actions">
+                                    <a href="../common/annonce-details.html?id=${annonce.id}" class="btn btn-sm btn-outline">Voir</a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des données:', error);
+            }
+            
+            // Gérer la déconnexion
+            document.getElementById('logout-btn').addEventListener('click', async function(e) {
+                e.preventDefault();
+                await logout();
+                window.location.href = '../../index.html';
+            });
+            
+            // Menu mobile
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+        });
+        
+        // Fonctions utilitaires
+        function getRoleClass(role) {
+            switch (role) {
+                case 'admin': return 'role-admin';
+                case 'recruteur': return 'role-recruteur';
+                case 'candidat': return 'role-candidat';
+                default: return 'role-candidat';
+            }
+        }
+        
+        function getRoleText(role) {
+            switch (role) {
+                case 'admin': return 'Administrateur';
+                case 'recruteur': return 'Recruteur';
+                case 'candidat': return 'Candidat';
+                default: return 'Candidat';
+            }
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+    </script>
+</body>
+</html>
