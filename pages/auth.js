@@ -9,3 +9,5 @@
 // Ajout du formulaire d'inscription avec sélection de rôle - Implémentation 2025-04-16
 
 // Implémentation de la validation des champs d'inscription - Implémentation 2025-04-16
+
+// Création de la page de réinitialisation de mot de passe - Implémentation 2025-04-16
