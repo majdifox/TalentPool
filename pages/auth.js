@@ -15,3 +15,5 @@
 // Ajout du formulaire de réinitialisation - Implémentation 2025-04-16
 
 // Intégration de l'API pour l'authentification - Implémentation 2025-04-16
+
+// Ajout de la gestion des tokens JWT - Implémentation 2025-04-16
