@@ -19,3 +19,5 @@
 // Amélioration du design des formulaires de candidature - Implémentation 2025-04-16
 
 // Optimisation de l'upload des fichiers - Implémentation 2025-04-16
+
+// Ajout de la prévisualisation des documents - Implémentation 2025-04-16
