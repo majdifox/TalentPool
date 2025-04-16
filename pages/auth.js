@@ -11,3 +11,5 @@
 // Implémentation de la validation des champs d'inscription - Implémentation 2025-04-16
 
 // Création de la page de réinitialisation de mot de passe - Implémentation 2025-04-16
+
+// Ajout du formulaire de réinitialisation - Implémentation 2025-04-16
