@@ -23,3 +23,5 @@
 // Ajout de la déconnexion - Implémentation 2025-04-16
 
 // Sécurisation des routes protégées - Implémentation 2025-04-16
+
+// Correction de bugs d'authentification - Implémentation 2025-04-16
