@@ -9,3 +9,5 @@
 // Ajout de la validation des champs d'annonce - Implémentation 2025-04-16
 
 // Implémentation de la modification d'annonce - Implémentation 2025-04-16
+
+// Ajout de la suppression d'annonce - Implémentation 2025-04-16
