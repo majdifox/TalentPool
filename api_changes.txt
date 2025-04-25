@@ -1,1 +1,1 @@
-Integrated external API for fetching real-time data
+Refactored API response handling for better error messages
