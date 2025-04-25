@@ -1,1 +1,1 @@
-Added API service provider for handling external API requests
+Implemented authentication middleware for securing API endpoints
