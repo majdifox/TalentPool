@@ -1,1 +1,1 @@
-Refactored API response handling for better error messages
+Fixed CORS issues to allow frontend access to the API
