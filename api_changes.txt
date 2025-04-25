@@ -1,1 +1,1 @@
-Fixed CORS issues to allow frontend access to the API
+Added API rate limiting to prevent abuse
