@@ -1,1 +1,1 @@
-Implemented logging for API requests and responses
+Added API service provider for handling external API requests
